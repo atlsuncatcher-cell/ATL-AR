@@ -1,191 +1,170 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-  <title>ATL (Attract The Light) - AR Scanner</title>
-
-  <!-- A-Frame -->
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-
-  <!-- MindAR -->
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.0/dist/mindar-image-aframe.prod.js"></script>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ATL - AR Viewer</title>
   <style>
-    body, html {
-      margin:0; padding:0; height:100%; overflow:hidden;
-      background:#2e2038; color:#fff; font-family:Arial;
-    }
-    #start-btn {
-      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-      padding:12px 22px; background:white; color:black;
-      font-weight:bold; border-radius:8px; z-index:20; border:none;
-    }
-    .hint {
-      position:absolute; bottom:10px; width:100%; text-align:center;
-      font-size:14px; z-index:10;
-    }
-  </style>
-</head>
-
-<body>
-
-<button id="start-btn">Start AR</button>
-<div class="hint">Point the camera at your printed photo</div>
-
-<a-scene
-  mindar-image="maxTrack: 1;"
-  color-space="sRGB"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: false"
-  embedded
->
-  <a-assets>
-    <video id="ar-video" autoplay loop crossorigin="anonymous" playsinline></video>
-  </a-assets>
-
-  <a-entity mindar-image-target="targetIndex: 0">
-    <a-plane
-      id="video-plane"
-      width="1.2" height="0.8"
-      position="0 0 0"
-      material="shader: flat; src: #ar-video;"
-    ></a-plane>
-  </a-entity>
-
-  <a-entity camera></a-entity>
-</a-scene>
-
-<script src="script.js"></script>
-
-</body>
-</html>
-
-
-<!-- <!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-  <title>ATL (Attract The Light) - AR Scanner</title>
- A-Frame 
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
- MindAR for A-Frame 
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.0/dist/mindar-image-aframe.prod.js"></script>
-
-  <style>
-    body, html { margin:0; padding:0; height:100%; overflow:hidden; background:rgb(157, 114, 166); font-family: Arial; color:#fff; }
-    #start-btn { position: absolute; left:50%; top:50%; transform:translate(-50%, -50%); z-index: 10; padding:12px 20px; border-radius:8px; background:#fff; color:#000; font-weight:bold; border:none; cursor:pointer; }
-    .title { text-align:center; margin-top:12px; }
-    .hint { position:absolute; bottom:14px; width:100%; text-align:center; font-size:14px; z-index:10; }
-    #fallback { position:absolute; left:41%; top:90px; z-index:10; background:rgba(0,0,0,0.4); padding:8px; border-radius:6px; font-size:13px; }
+    :root{--accent:#9d72a6;--bg:#2b2030;--card:#3a2d3d;--muted:#cfc6d1}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,var(--bg),#1f1722);color:#fff;min-height:100vh}
+    header{padding:18px 20px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .logo{font-weight:700;color:var(--accent)}
+    .subtitle{opacity:0.9;font-size:0.95rem}
+    main{padding:18px;display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
+    .controls button{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+    .hint{font-size:0.9rem;color:var(--muted);margin-top:10px}
+    #preview{width:100%;height:220px;background:#111;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    #preview img{max-width:100%;max-height:100%;object-fit:contain;opacity:0.95}
+    footer{padding:12px 20px;text-align:center;color:var(--muted);font-size:0.9rem}
+    #ar-root{position:fixed;inset:0;display:none;z-index:50}
+    #close-ar{position:absolute;left:12px;top:12px;z-index:60;padding:10px;border-radius:8px;background:rgba(0,0,0,0.6);color:#fff;border:0}
+    #message{position:absolute;right:12px;top:12px;z-index:60;padding:10px;border-radius:8px;background:rgba(0,0,0,0.4);color:#fff}
   </style>
 </head>
 <body>
+  <header>
+    <div class="logo">ATL - Attract The Light</div>
+    <div class="subtitle">AR Wedding Video Viewer</div>
+  </header>
 
-  <div class="title"><h1><u>Attract The Light</u></h1></div>
+  <main>
+    <section class="card" aria-labelledby="left-title">
+      <h3 id="left-title">Hey Cuties</h3>
+      <div id="preview"><img id="sample-img" src="assets/images/IMG_8086.PNG" alt="Preview"></div>
+      <div style="height:12px"></div>
+      <div class="controls">
+   
 
-  <div id="fallback">Welcome ATL Customer!! If AR doesn't work, use the fallback link below to play the video.</div>
+        <div style="height:14px"></div>
+        <button id="deploy-btn">Open AR (test)</button>
+        <div class="hint">Use your phone browser on HTTPS (GitHub Pages / Vercel). For local testing use <code>http://localhost</code> via Live Server.</div>
+      </div>
+    </section>
 
-  <button id="start-btn">Start AR</button>
-  <div class="hint">Point the camera at the printed photo</div>
+    <section class="card">
+      <h3>Preview & Status</h3>
+      <div id="status" style="margin-top:12px;color:var(--muted)">Status: Ready. No AR active.</div>
+      <div style="height:12px"></div>
 
-  <a-scene
-    mindar-image="imageTargetSrc: targets/target001.mind; maxTrack: 1;"
-    vr-mode-ui="enabled: false"
-    embedded
-    device-orientation-permission-ui="enabled: false"
-  >
-    <a-assets id="assets">
-      <video id="ar-video" src="videos/video001.mp4" preload="auto" loop crossorigin="anonymous"></video>
-    </a-assets>
+      <h4 style="margin-bottom:6px">Mappings (from config.json)</h4>
+      <pre id="mapping-preview" style="background:#241a26;padding:12px;border-radius:8px;color:var(--muted)">Loading mappings...</pre>
 
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-video
-        src="#ar-video"
-        width="1.2"
-        height="0.8"
-        position="0 0 0"
-      ></a-video>
-    </a-entity>
+      <div style="height:12px"></div>
+      <details style="color:var(--muted)"><summary>How it works</summary>
+        <p style="margin:8px 0">Upload your images to MindAR generator, download combined <code>targets.mind</code>, add it into <code>targets/</code>, add videos into <code>videos/</code>, then edit <code>config.json</code> mapping indices to filenames. Press "Open AR" on your phone and allow camera.</p>
+      </details>
+    </section>
+  </main>
 
-    <a-entity camera></a-entity>
-  </a-scene>
 
+
+  <div id="ar-root" role="application" aria-hidden="true">
+    <button id="close-ar">Close</button>
+    <div id="message">Point camera at print</div>
+    <div id="ar-container"></div>
+  </div>
+  <footer class="card">Built for ATL · Dynamic multi-target AR (A-Frame + MindAR)</footer>
   <script>
-    const btn = document.getElementById("start-btn");
-    btn.addEventListener("click", async () => {
-      try {
-        await navigator.mediaDevices.getUserMedia({ video: true });
-        document.querySelector("a-scene").systems["mindar-image-system"].start();
-        document.getElementById("ar-video").play();
-        btn.style.display = "none";
-      } catch (err) {
-        alert("Please allow camera permissions to start AR.");
-      }
+  async function loadConfig(){
+    try{
+      const res = await fetch('config.json');
+      if(!res.ok) throw new Error('config.json not found');
+      const cfg = await res.json();
+      document.getElementById('mapping-preview').textContent = JSON.stringify(cfg,null,2);
+      return cfg.mappings || [];
+    }catch(e){
+      document.getElementById('mapping-preview').textContent = 'No config.json found. Use default sample mapping.';
+      return [
+        { "targetIndex": 0, "video": "videos/video001.mp4" },
+        { "targetIndex": 1, "video": "videos/video002.mp4" }
+      ];
+    }
+  }
+
+  async function buildARScene(mappings){
+    const container = document.getElementById('ar-container');
+    container.innerHTML = '';
+
+    // create a-scene with MindAR attributes loaded from CDN
+    const scene = document.createElement('a-scene');
+    scene.setAttribute('embedded','');
+    scene.setAttribute('vr-mode-ui','enabled:false');
+    scene.setAttribute('device-orientation-permission-ui','enabled:false');
+    scene.setAttribute('mindar-image','imageTargetSrc: ./targets/targets.mind;');
+
+    // assets
+    const assets = document.createElement('a-assets');
+    assets.setAttribute('id','asset-container');
+
+    mappings.forEach((m,idx) => {
+      const v = document.createElement('video');
+      v.id = 'v'+idx;
+      v.src = m.video;
+      v.loop = true;
+      v.preload = 'auto';
+      v.crossOrigin = 'anonymous';
+      v.style.display = 'none';
+      assets.appendChild(v);
     });
+
+    scene.appendChild(assets);
+
+    mappings.forEach((m,idx) => {
+      const aVideo = document.createElement('a-video');
+      aVideo.setAttribute('src', '#v'+idx);
+      aVideo.setAttribute('target-index', String(m.targetIndex));
+      aVideo.setAttribute('width','1');
+      aVideo.setAttribute('height','0.6');
+      scene.appendChild(aVideo);
+    });
+
+    const cam = document.createElement('a-entity');
+    cam.setAttribute('camera','');
+    scene.appendChild(cam);
+
+    container.appendChild(scene);
+    return scene;
+  }
+
+  document.getElementById('deploy-btn').addEventListener('click', async ()=>{
+    document.getElementById('status').textContent = 'Status: Initializing...';
+    const mappings = await loadConfig();
+    document.getElementById('ar-root').style.display = 'block';
+    document.getElementById('ar-root').setAttribute('aria-hidden','false');
+
+    const scene = await buildARScene(mappings);
+
+    try{
+      await navigator.mediaDevices.getUserMedia({video:true});
+    }catch(err){
+      alert('Camera permission required. Open this page on your phone and allow camera.');
+      return;
+    }
+
+    try{
+      scene.addEventListener('renderstart', ()=>{ document.getElementById('status').textContent='Status: AR running'; });
+      scene.systems['mindar-image-system'].start();
+      document.querySelectorAll('#asset-container video').forEach(v => { v.muted=true; v.play().catch(()=>{}); });
+    }catch(e){
+      console.error('AR start error',e);
+      alert('Could not start AR. Check targets/targets.mind exists and is valid (generated by MindAR image tool).');
+      document.getElementById('status').textContent = 'Status: Error starting AR';
+    }
+  });
+
+  document.getElementById('close-ar').addEventListener('click', () => {
+    document.getElementById('ar-root').style.display = 'none';
+    document.getElementById('status').textContent = 'Status: Stopped';
+    try{
+      const scene = document.querySelector('a-scene');
+      if(scene && scene.systems && scene.systems['mindar-image-system']) scene.systems['mindar-image-system'].stop();
+    }catch(e){}
+    document.getElementById('ar-container').innerHTML = '';
+  });
+
+  loadConfig();
   </script>
 
 </body>
-</html> -->
-
-
-
-<!-- <!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-  <title> ATL(Attract The Light)-AR Scanner </title> -->
-  <!-- A-Frame -->
-  <!-- <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-   MindAR for A-Frame
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.0/dist/mindar-image-aframe.prod.js"></script>
-
-  <style>
-    body, html { margin:0; padding:0; height:100%; overflow:hidden; background:rgb(157, 114, 166); font-family: Arial, Helvetica, sans-serif; color:#fff; }
-    #start-btn { position: absolute; left:50%; top:50%; transform:translateX(-50%); z-index: 10; padding:10px 18px; border-radius:8px; background:#fff; color:#000; font-weight:600; border:none; }
-    .tittle{text-align: center;top: 10px;}
-    .hint { position:absolute; bottom:14px; width:100%; text-align:center; color:#fff; font-size:14px; z-index:10; }
-    #loader { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:10; }
-    #fallback { position:absolute; left:41%; top:100px; z-index:10; background:rgba(0,0,0,0.4); padding:8px;border-radius:6px; font-size:13px; }
- 
-  </style>
-</head>
-<body>
-  <div  class="tittle"><h1><u>Attract The Light</u></h1></div>
-  
-  <div id="fallback">Welcome ATL Customer!! If AR doesn't work, use the fallback link below to play the video.</div>
-  <br/>
-  <br/>
-  <button id="start-btn">Start AR</button>
-  <div class="hint">Point the camera at the printed photo</div>
-
-  
-  <a-scene
-    mindar-image="imageTargetSrc: ; maxTrack: 1;"
-    vr-mode-ui="enabled: false"
-    embedded
-    color-space="sRGB"
-    renderer="antialias: true; alpha: true;"
-    device-orientation-permission-ui="enabled: false"
-  >
-    <a-assets id="assets">
-       Video asset will be injected dynamically 
-       Placeholder image to avoid flash 
-      <img id="placeholder-img" src="" crossorigin="anonymous" />
-    </a-assets>
-
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane id="video-plane" position="0 0 0" rotation="0 0 0"
-               width="1.2" height="0.8"
-               material="shader: flat; src: #ar-video; transparent: true">
-      </a-plane>
-    </a-entity>
-
-    <a-entity camera></a-entity>
-  </a-scene>
-
-  <script src="script.js"></script>
-</body>
-</html> -->
+</html>

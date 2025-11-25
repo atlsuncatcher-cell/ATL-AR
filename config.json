@@ -1,6 +1,7 @@
 {
-  "001": {
-    "target": "targets/target001.mind",
-    "video": "videos/video001.mp4"
-  }
+  "mappings": [
+    { "targetIndex": 0, "video": "videos/video001.mp4" },
+    { "targetIndex": 1, "video": "videos/video002.mp4" },
+    { "targetIndex": 2, "video": "videos/video003.mp4" }
+  ]
 }
