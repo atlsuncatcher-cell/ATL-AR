@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title> ATL(Attract The Light)-AR Scanner </title>
+  <link rel="icon" type="image/png" href="assets/im1.png">
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <!-- MindAR for A-Frame -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.0/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    body, html { margin:0; padding:0; height:100%; overflow:hidden; background:rgb(157, 114, 166); font-family: Arial, Helvetica, sans-serif; color:#fff; }
+    #start-btn { position: absolute; left:50%; top:50%; transform:translateX(-50%); z-index: 10; padding:10px 18px; border-radius:8px; background:#fff; color:#000; font-weight:600; border:none; }
+    .tittle{text-align: center;top: 10px;}
+    .hint { position:absolute; bottom:14px; width:100%; text-align:center; color:#fff; font-size:14px; z-index:10; }
+    #loader { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:10; }
+    #fallback { position:absolute; left:41%; top:100px; z-index:10; background:rgba(0,0,0,0.4); padding:8px;border-radius:6px; font-size:13px; }
+ 
+  </style>
+</head>
+<body>
+  <div  class="tittle"><h1><u>Attract The Light</u></h1></div>
+  
+  <div id="fallback">Welcome ATL Customer!! If AR doesn't work, use the fallback link below to play the video.</div>
+  <br/>
+  <br/>
+  <button id="start-btn">Start AR</button>
+  <div class="hint">Point the camera at the printed photo</div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ; maxTrack: 1;"
+    vr-mode-ui="enabled: false"
+    embedded
+    color-space="sRGB"
+    renderer="antialias: true; alpha: true;"
+    device-orientation-permission-ui="enabled: false"
+  >
+    <a-assets id="assets">
+      <!-- Video asset will be injected dynamically -->
+      <!-- Placeholder image to avoid flash -->
+      <img id="placeholder-img" src="" crossorigin="anonymous" />
+    </a-assets>
+
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-plane id="video-plane" position="0 0 0" rotation="0 0 0"
+               width="1.2" height="0.8"
+               material="shader: flat; src: #ar-video; transparent: true">
+      </a-plane>
+    </a-entity>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script src="script.js"></script>
+</body>
+</html>
