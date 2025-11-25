@@ -76,8 +76,7 @@
     }catch(e){
       document.getElementById('mapping-preview').textContent = 'No config.json found. Use default sample mapping.';
       return [
-        { "targetIndex": 0, "video": "videos/video001.mp4" },
-        { "targetIndex": 1, "video": "videos/video002.mp4" }
+        { "targetIndex": 0, "video": "videos/video001.mp4" }
       ];
     }
   }
@@ -144,7 +143,11 @@
 
     try{
       scene.addEventListener('renderstart', ()=>{ document.getElementById('status').textContent='Status: AR running'; });
-      scene.systems['mindar-image-system'].start();
+      const sceneEl = document.querySelector('a-scene');
+      sceneEl.addEventListener('loaded', () => {
+        const arSystem = sceneEl.systems['mindar-image-system'];
+        arSystem.start();
+      });
       document.querySelectorAll('#asset-container video').forEach(v => { v.muted=true; v.play().catch(()=>{}); });
     }catch(e){
       console.error('AR start error',e);
